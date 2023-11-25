@@ -47,7 +47,7 @@ class elements():
     _usr : str          = ""
 
 
-    def __init__(self, applets : list, authors : str, title : str = "ΣΔAΩ") -> None:
+    def __init__(self, applets : list, authors : str, title : str = "Meuh Meuh, your HR assistant!") -> None:
 
         self.scripts = self._scripts()
         self.head = self._head(title)
@@ -119,7 +119,7 @@ class elements():
 
         return _Mk(js)
     
-    def _head(self, title : str = "ΣΔAΩ") -> _Mk:
+    def _head(self, title : str = "Meuh Meuh, your HR assistant!") -> _Mk:
 
         return _Mk(f"""
             <title>{title}</title>
@@ -131,7 +131,7 @@ class elements():
     def _header(self) -> _Mk:
 
         return _Mk(f"""
-            <a href="/" class="logo"><strong>ΣΔAΩ</strong></a>
+            <a href="/" class="logo"><strong>Meuh Meuh, your HR assistant!</strong></a>
             <ul class="icons">
                 <li><a href="https://github.com/Flotchet" target="_blank" rel="noreferrer noopener" class="icon brands fa-github"><span class="label">Github</span></a></li>
                 <li><a href="https://www.linkedin.com/in/florentmaisse/" target="_blank" rel="noreferrer noopener" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
@@ -241,7 +241,7 @@ if __name__ == "__main__":
     print("It is meant to be imported and used as a class.")
     print("See the documentation for more information.")
     
-    elem = elements(applets = ["login", "sign up"], authors = "Florent Maisse")
+    elem = elements(applets = ["login", "sign up"], authors = "Meuh Meuh Corporation")
     elem.set_content("hello")
     elem.set_side_content("HELLO")
     elem.set_search(["choice1", "choice2"])

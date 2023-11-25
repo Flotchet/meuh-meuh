@@ -1,5 +1,5 @@
-# Dynamic web app for the ΣΔAΩ project
-# Author: Florent Maisse
+# Dynamic web app for the Meuh Meuh, your HR assistant! project
+# Author: Meuh Meuh Corporation
 
 # Dynamic import of applets and configuration files
 
@@ -63,7 +63,7 @@ ALLOWED_DATA_EXTENSIONS = {'csv', 'db', 'txt'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
 app.config["DEBUG"] = True
-
+app.config["SESSION_TYPE"] = "filesystem"
 
 
 def menu(element : dict) -> Markup: # type: ignore 
@@ -96,13 +96,11 @@ def menu(element : dict) -> Markup: # type: ignore
 @app.route('/<applet>', methods = ['GET', 'POST', 'PUT', 'DELETE', 'SUPER'])
 def core(applet = None):
 
-    
-
     try:
         elem = session['elem']
 
     except:
-        elem = elements(applets = applets_attr.keys(), authors = "Florent Maisse")
+        elem = elements(applets = applets_attr.keys(), authors = "Meuh Meuh Corporation")
         elem = elem()
         session['elem'] = elem
         session['last_applet'] = applet
