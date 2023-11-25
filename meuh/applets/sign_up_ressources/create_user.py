@@ -6,7 +6,7 @@ import string
 
 
 def create_user(username, password, password2, conn) :
-    
+        print("Creating user")
         #check if the user exists
         if conn.execute(sqlalchemy.text(f"""SELECT EXISTS(SELECT 1 FROM users WHERE username = '{username}')""")).fetchone()[0]:
             return "User already exists"
@@ -36,7 +36,8 @@ def create_user(username, password, password2, conn) :
             return "Username too short"
         
         #put the user in the database
-        conn.execute(sqlalchemy.text(f"""INSERT INTO users (username, password, attr_level) VALUES ('{username}', '{hashlib.sha256(password.encode()).hexdigest()}', 1)"""))
+        print("User created")
+        conn.execute(sqlalchemy.text(f"""INSERT INTO users (username, password, attr_level) VALUES ('{username}', '{hashlib.sha256(password.encode()).hexdigest()}', 4)"""))
         
         return """<meta http-equiv="refresh" content="0; URL=/login" />"""
             
