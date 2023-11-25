@@ -25,22 +25,24 @@ def home(elem, method, form, args):
         query_asc = "SELECT username, points, sick_days, holidays, late_hours FROM users ORDER BY points ASC"
         users_asc = conn.execute(sql.text(query_asc)).fetchall()
 
-        query_asc_report = """SELECT u.username, u.points, COUNT(r.user_id) 
+        query_asc_report = """SELECT u.username, u.points, u.extra_hours, COUNT(r.user_id) 
                             FROM users AS u 
                             LEFT JOIN reports AS r ON u.id = r.user_id
                             GROUP BY u.id, u.username, u.points 
-                            ORDER BY u.points ASC"""
+                            ORDER BY u.points ASC
+                            LIMIT 10"""
         users_asc_report = conn.execute(sql.text(query_asc_report)).fetchall()
 
         # Requête pour les données triées par ordre descendant
         query_desc = "SELECT username, points, sick_days, holidays, late_hours FROM users ORDER BY points DESC"
         users_desc = conn.execute(sql.text(query_desc)).fetchall()
 
-        query_desc_report = """SELECT u.username, u.points, COUNT(r.user_id) 
+        query_desc_report = """SELECT u.username, u.points, u.extra_hours, COUNT(r.user_id) 
                             FROM users AS u 
                             LEFT JOIN reports AS r ON u.id = r.user_id
                             GROUP BY u.id, u.username, u.points 
-                            ORDER BY u.points DESC"""
+                            ORDER BY u.points DESC
+                            LIMIT 10"""
         users_desc_report = conn.execute(sql.text(query_desc_report)).fetchall()
 
         return users_asc, users_desc, users_asc_report, users_desc_report
@@ -64,14 +66,14 @@ def home(elem, method, form, args):
         content_udesc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td><td>{user[3]}</td><td>{user[4]}</td></tr>"
     content_udesc += "</table>"
 
-    content_rasc = "<table><tr><th>Username </th><th>Points</th><th>Reports Count</th></tr>"
+    content_rasc = "<table><tr><th>Username </th><th>Points</th><th>Extra Hours</th><th>Reports Count</th></tr>"
     for user in user_asc_report[0:10]:
-        content_rasc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td></tr>"
+        content_rasc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td><td>{user[3]}</td></tr>"
     content_rasc += "</table>"
 
-    content_rdesc = "<table><tr><th>Username</th><th>Points</th><th>Reports Count</th></tr>"
+    content_rdesc = "<table><tr><th>Username</th><th>Points</th><th>Extra Hours</th><th>Reports Count</th></tr>"
     for user in user_desc_report[0:10]:
-        content_rdesc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td></tr>"
+        content_rdesc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td><td>{user[3]}</td></tr>"
     content_rdesc += "</table>"
 
 
