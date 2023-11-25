@@ -22002,7 +22002,7 @@ early leave
 not working
 """
 
-
+import lorem
 curr = os.path.dirname(os.path.realpath(__file__))
 def make_db(names, report_types):
     #create a database
@@ -22018,26 +22018,11 @@ def make_db(names, report_types):
         points INTEGER NOT NULL,
         sick_days INTEGER NOT NULL,
         holidays INTEGER NOT NULL,
-        late_hours INTEGER NOT NULL
+        late_hours INTEGER NOT NULL,
+        extra_hours INTEGER NOT NULL
         )"""))
     conn.commit()
     print("Table created")
-    #add the admin
-    conn.execute(sqlalchemy.text("""INSERT INTO users (username, password, attr_level, points, sick_days, holidays, late_hours) VALUES ('admin', 'admin', 3, 100000, 10, 30, 100)"""))
-    conn.commit()
-    print("Admin created")
-    #add the users
-    names = names.replace("'", '')
-    for name in names.split('\n'):
-        password = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase + string.punctuation) for _ in range(10))
-        attr_level = random.randint(1, 3)
-        points = random.randint(0, 100000)
-        sick_days = random.randint(0, 10)
-        holidays = random.randint(0, 30)
-        late_hours = random.randint(0, 100)
-        conn.execute(sqlalchemy.text(f"""INSERT INTO users (username, password, attr_level, points, sick_days, holidays, late_hours) VALUES ('{name}', '{hashlib.sha256(password.encode()).hexdigest()}', {attr_level}, {points}, {sick_days}, {holidays}, {late_hours})"""))
-        conn.commit()
-        print(f"User {name} created with password {password}")
 
     conn.execute(sqlalchemy.text("""CREATE TABLE reports (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22046,27 +22031,45 @@ def make_db(names, report_types):
         date TEXT NOT NULL,
         report_type TEXT NOT NULL,
         accepted BOOLEAN NOT NULL,
+        comment TEXT Not NULL,
         FOREIGN KEY (user_id) REFERENCES users(id),
         FOREIGN KEY (user_id2) REFERENCES users(id)
         )"""))
 
     conn.commit()
-
-    for i in range(0, 2*len(names.split('\n'))):
-        user_id = random.randint(1, len(names.split('\n')))
-        user_id2 = random.randint(1, len(names.split('\n')))
-        while True:
-            if user_id == user_id2:
-                user_id2 = random.randint(1, len(names.split('\n')))
-            else:
-                break
-
-        date = f"{random.randint(1, 28)}/{random.randint(1, 12)}/{random.randint(2018, 2023)}"
-        report_type = random.choice(report_types.split('\n'))
-        accepted = random.choice([True, False])
-        conn.execute(sqlalchemy.text(f"""INSERT INTO reports (user_id, user_id2, date, report_type, accepted) VALUES ({user_id}, {user_id2}, '{date}', '{report_type}', {accepted})"""))
+    #add the admin
+    conn.execute(sqlalchemy.text("""INSERT INTO users (username, password, attr_level, points, sick_days, holidays, late_hours, extra_hours) VALUES ('admin', 'admin', 3, 100000, 0, 0, 0, 161)"""))
+    conn.commit()
+    print("Admin created")
+    #add the users
+    names = names.replace("'", '')
+    for i,name in enumerate(names.split('\n'), 1):
+        password = ''.join(random.choice(string.ascii_uppercase + string.digits + string.ascii_lowercase + string.punctuation) for _ in range(10))
+        attr_level = random.randint(1, 3)
+        sick_days = random.randint(0, 10)
+        holidays = random.randint(0, 30)
+        late_hours = random.randint(0, 100)
+        extra_hours = random.randint(0, 160)
+        points = 10000 - 200*sick_days - 50*holidays - 10*late_hours + 10*extra_hours
+        conn.execute(sqlalchemy.text(f"""INSERT INTO users (username, password, attr_level, points, sick_days, holidays, late_hours, extra_hours) VALUES ('{name}', '{hashlib.sha256(password.encode()).hexdigest()}', {attr_level}, {points}, {sick_days}, {holidays}, {late_hours}, {extra_hours})"""))
+        print(f"User {name} created with password {password}")
         conn.commit()
-        print(f"Report {i} created")
+        user_id = conn.execute(sqlalchemy.text(f"""SELECT id FROM users WHERE username = '{name}'""")).fetchone()[0]
+        for j in range((10000-points)//100 + 1):
+            user_id2 = random.randint(1, len(names.split('\n')))
+            while True:
+                if user_id == user_id2:
+                    user_id2 = random.randint(1, len(names.split('\n')))
+                else:
+                    break
+
+            date = f"{random.randint(1, 28)}/{random.randint(1, 12)}/{random.randint(2018, 2023)}"
+            report_type = random.choice(report_types.split('\n'))
+            accepted = random.choice([True, False])
+            comment = lorem.sentence()
+            conn.execute(sqlalchemy.text(f"""INSERT INTO reports (user_id, user_id2, date, report_type, accepted, comment) VALUES ({user_id}, {user_id2}, '{date}', '{report_type}', {accepted}, '{comment}')"""))
+            print(f"Report {i}-{j} created")
+    conn.commit()
 
     conn.close()
 
