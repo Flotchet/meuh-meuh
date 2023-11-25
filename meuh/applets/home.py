@@ -16,6 +16,34 @@ from attributions_changer import *  # type: ignore
 
 
 def home(elem, method, form, args):
+    def get_data():
+        # Connexion à la base de données
+        engine = sql.create_engine('sqlite:///' + join(BASEDIR, 'databases/users.db'))
+        conn = engine.connect()
+
+        # Requête pour les données triées par ordre ascendant
+        query_asc = "SELECT username, points, sick_days, holidays, late_hours FROM users ORDER BY points ASC"
+        users_asc = conn.execute(sql.text(query_asc)).fetchall()
+
+        query_asc_report = """SELECT u.username, u.points, COUNT(r.user_id) 
+                            FROM users AS u 
+                            LEFT JOIN reports AS r ON u.id = r.user_id
+                            GROUP BY u.id, u.username, u.points 
+                            ORDER BY u.points ASC"""
+        users_asc_report = conn.execute(sql.text(query_asc_report)).fetchall()
+
+        # Requête pour les données triées par ordre descendant
+        query_desc = "SELECT username, points, sick_days, holidays, late_hours FROM users ORDER BY points DESC"
+        users_desc = conn.execute(sql.text(query_desc)).fetchall()
+
+        query_desc_report = """SELECT u.username, u.points, COUNT(r.user_id) 
+                            FROM users AS u 
+                            LEFT JOIN reports AS r ON u.id = r.user_id
+                            GROUP BY u.id, u.username, u.points 
+                            ORDER BY u.points DESC"""
+        users_desc_report = conn.execute(sql.text(query_desc_report)).fetchall()
+
+        return users_asc, users_desc, users_asc_report, users_desc_report
     # Fetch user stats
 
     elem['search'] = Mk(f"""Hello there ! you are logged in as {elem['_usr']}.""")
@@ -24,21 +52,53 @@ def home(elem, method, form, args):
         elem['search'] = Mk(
             """Hello there ! you are not logged in. Please log in or sign up to access the full content of this website.""")
 
+    user_asc, user_desc, user_asc_report, user_desc_report = get_data()
+    # Create tables
+    content_uasc = "<table><tr><th>Username</th><th>Points</th><th>Sick Days</th><th>Holidays</th><th>Late Hours</th></tr>"
+    for user in user_asc[0:10]:
+        content_uasc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td><td>{user[3]}</td><td>{user[4]}</td></tr>"
+    content_uasc += "</table>"
+
+    content_udesc = "<table><tr><th>Username</th><th>Points</th><th>Sick Days</th><th>Holidays</th><th>Late Hours</th></tr>"
+    for user in user_desc[0:10]:
+        content_udesc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td><td>{user[3]}</td><td>{user[4]}</td></tr>"
+    content_udesc += "</table>"
+
+    content_rasc = "<table><tr><th>Username </th><th>Points</th><th>Reports Count</th></tr>"
+    for user in user_asc_report[0:10]:
+        content_rasc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td></tr>"
+    content_rasc += "</table>"
+
+    content_rdesc = "<table><tr><th>Username</th><th>Points</th><th>Reports Count</th></tr>"
+    for user in user_desc_report[0:10]:
+        content_rdesc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td></tr>"
+    content_rdesc += "</table>"
+
+
+
     # elem['content'] = Mk("")
 
-    elem['content'] = Mk("""<div style='display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap; gap: 20px; width: 100%;'>
-        <div style='flex: 1; min-width: 250px; max-width: 50%;'>
-            <table style='border: 1px solid black; width: 100%; table-layout: fixed;'><caption><strong>Meilleurs (Haut)</strong></caption><tr><th>Username</th><th>Points</th><th>Sick Days</th><th>Holidays</th><th>Late Hours</th></tr><tr><td>Mackintosh</td><td>3</td><td>5</td><td>10</td><td>24</td></tr><tr><td>Samuela</td><td>7</td><td>7</td><td>25</td><td>55</td></tr><tr><td>Lorene</td><td>9</td><td>9</td><td>11</td><td>37</td></tr><tr><td>Haukom</td><td>14</td><td>1</td><td>5</td><td>49</td></tr><tr><td>Aires</td><td>15</td><td>0</td><td>18</td><td>74</td></tr><tr><td>Nea</td><td>22</td><td>7</td><td>6</td><td>7</td></tr><tr><td>Conard</td><td>23</td><td>8</td><td>14</td><td>19</td></tr><tr><td>Gamal</td><td>23</td><td>1</td><td>28</td><td>35</td></tr><tr><td>Medrek</td><td>32</td><td>0</td><td>22</td><td>58</td></tr><tr><td>Mages</td><td>36</td><td>6</td><td>29</td><td>73</td></tr><tr><td>Jaret</td><td>52</td><td>8</td><td>16</td><td>38</td></tr><tr><td>Leon</td><td>58</td><td>6</td><td>10</td><td>12</td></tr><tr><td>Parnell</td><td>59</td><td>5</td><td>29</td><td>69</td></tr><tr><td>Bandler</td><td>60</td><td>1</td><td>11</td><td>35</td></tr><tr><td>Yvon</td><td>60</td><td>5</td><td>4</td><td>68</td></tr></table>
+    elem['content'] = Mk(f"""
+    <div class="row gtr-uniform">
+
+        <div class="col-6">
+            <h3>Top 10 Pires</h3>
+            {content_uasc}
         </div>
-        <div style='flex: 1; min-width: 250px; max-width: 50%;'>
-            <table style='border: 1px solid black; width: 100%; table-layout: fixed;'><caption><strong>Pires (Haut)</strong></caption><tr><th>Username</th><th>Points</th><th>Sick Days</th><th>Holidays</th><th>Late Hours</th></tr><tr><td>admin</td><td>100000</td><td>10</td><td>30</td><td>100</td></tr><tr><td>Nereus</td><td>99991</td><td>1</td><td>27</td><td>46</td></tr><tr><td>Patnode</td><td>99979</td><td>4</td><td>1</td><td>83</td></tr><tr><td>Bratton</td><td>99972</td><td>6</td><td>1</td><td>24</td></tr><tr><td>Kawai</td><td>99972</td><td>10</td><td>24</td><td>29</td></tr><tr><td>Burrton</td><td>99968</td><td>6</td><td>5</td><td>51</td></tr><tr><td>Zaremski</td><td>99961</td><td>5</td><td>30</td><td>36</td></tr><tr><td>Femmine</td><td>99951</td><td>9</td><td>17</td><td>57</td></tr><tr><td>Kenzie</td><td>99923</td><td>1</td><td>17</td><td>68</td></tr><tr><td>Parker</td><td>99912</td><td>10</td><td>19</td><td>56</td></tr><tr><td>Gabey</td><td>99908</td><td>9</td><td>8</td><td>43</td></tr><tr><td>Aviva</td><td>99880</td><td>8</td><td>0</td><td>43</td></tr><tr><td>Shandee</td><td>99880</td><td>1</td><td>20</td><td>93</td></tr><tr><td>Rebba</td><td>99873</td><td>10</td><td>11</td><td>52</td></tr><tr><td>Shaffert</td><td>99872</td><td>1</td><td>13</td><td>23</td></tr></table>
+
+        <div class="col-6">
+            <h3>Top 10 Meilleurs</h3>
+            {content_udesc}
         </div>
-        <div style='flex: 1; min-width: 250px; max-width: 50%;'>
-            <table style='border: 1px solid black; width: 100%; table-layout: fixed;'><caption><strong>Meilleurs (Bas)</strong></caption><tr><th>Username</th><th>Points</th><th>Reports Count</th></tr><tr><td>Mackintosh</td><td>3</td><td>1</td></tr><tr><td>Samuela</td><td>7</td><td>2</td></tr><tr><td>Lorene</td><td>9</td><td>1</td></tr><tr><td>Haukom</td><td>14</td><td>1</td></tr><tr><td>Aires</td><td>15</td><td>1</td></tr><tr><td>Nea</td><td>22</td><td>3</td></tr><tr><td>Conard</td><td>23</td><td>1</td></tr><tr><td>Gamal</td><td>23</td><td>2</td></tr><tr><td>Medrek</td><td>32</td><td>3</td></tr><tr><td>Mages</td><td>36</td><td>5</td></tr><tr><td>Jaret</td><td>52</td><td>2</td></tr><tr><td>Leon</td><td>58</td><td>1</td></tr><tr><td>Yvon</td><td>60</td><td>1</td></tr><tr><td>Gagnon</td><td>74</td><td>1</td></tr><tr><td>Harpp</td><td>81</td><td>2</td></tr></table>
+
+        <div class="col-6">
+            {content_rasc}
         </div>
-        <div style='flex: 1; min-width: 250px; max-width: 50%;'>
-            <table style='border: 1px solid black; width: 100%; table-layout: fixed;'><caption><strong>Pires (Bas)</strong></caption><tr><th>Username</th><th>Points</th><th>Reports Count</th></tr><tr><td>admin</td><td>100000</td><td>1</td></tr><tr><td>Nereus</td><td>99991</td><td>3</td></tr><tr><td>Patnode</td><td>99979</td><td>1</td></tr><tr><td>Bratton</td><td>99972</td><td>1</td></tr><tr><td>Kawai</td><td>99972</td><td>1</td></tr><tr><td>Burrton</td><td>99968</td><td>4</td></tr><tr><td>Zaremski</td><td>99961</td><td>3</td></tr><tr><td>Femmine</td><td>99951</td><td>4</td></tr><tr><td>Parker</td><td>99912</td><td>3</td></tr><tr><td>Gabey</td><td>99908</td><td>5</td></tr><tr><td>Aviva</td><td>99880</td><td>1</td></tr><tr><td>Shandee</td><td>99880</td><td>1</td></tr><tr><td>Rebba</td><td>99873</td><td>2</td></tr><tr><td>Shaffert</td><td>99872</td><td>3</td></tr><tr><td>Raab</td><td>99871</td><td>1</td></tr></table>
+
+        <div class="col-6">
+            {content_rdesc}
         </div>
+
     </div>""")
 
 

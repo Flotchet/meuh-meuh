@@ -131,7 +131,7 @@ class elements():
     def _header(self) -> _Mk:
 
         return _Mk(f"""
-            <a href="/" class="logo"><strong>Meuh Meuh, your HR assistant!</strong></a>
+            <a href="/" class="logo"><strong><img src="static/images/ezgif-1-aa23450885.gif" alt="pas trouvé" style="width: 40px;"/>  Meuh Meuh, your HR assistant!</strong></a>
             <ul class="icons">
                 <li><a href="https://github.com/Flotchet" target="_blank" rel="noreferrer noopener" class="icon brands fa-github"><span class="label">Github</span></a></li>
                 <li><a href="https://www.linkedin.com/in/florentmaisse/" target="_blank" rel="noreferrer noopener" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
