@@ -137,7 +137,8 @@ def core(applet = None):
 
         if elem['side_content'] == session['last_elem']['side_content']:
             #if not, return the last page
-            elem['side_content'] = ""
+            from flask import Markup as MK
+            elem['side_content'] = MK('<br/><div class="row gtr-uniform"><div class="col-9"><span class="image fit"><img src="static/images/polish-cow-dancing-cow.gif" alt="pas trouvé"/></span> </div></div>')
 
     
 

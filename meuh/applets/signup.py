@@ -35,6 +35,16 @@ def signup(elem, method, form, args):
 
 
 	elem['content'] = Mk(f"""       <section>
+									<div class="row gtr-uniform">
+									<div class="col-2">
+									</div>
+										<div class="col-8">
+											<span class="image fit"><img src="static/images/MEUH MEUH WANTS YOU.png" alt="pas trouvé"/></span>
+											{breaker()}
+										</div>
+									<div class="col-2">
+									</div>
+									</div>
 									<h3>Sign up</h3>
 									
 									<form method="post">

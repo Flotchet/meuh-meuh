@@ -28,10 +28,12 @@ def report(elem, method, form, args):
 	if method == "POST":
 
 		toadd = f"""<p>Report sent!</p>
-					<p>Thank you for your contribution!</p>"""
+					<p>Thank you for your contribution!</p>
+					<span class="image fit"><img src="static/images/polish-cow-dancing-cow.gif" alt="pas trouvé"/></span>"""
 
 		#add the report to the database
 		usr = form['usr']
+		
 	elem['content'] = Mk(f"""<section>
 								<h3>Report</h3>
 								an employee had done something wrong? report it here!
