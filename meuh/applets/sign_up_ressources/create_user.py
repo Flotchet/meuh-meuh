@@ -40,5 +40,9 @@ def create_user(username, password, password2, conn) :
         conn.execute(sqlalchemy.text(f"""INSERT INTO users (username, password, attr_level) VALUES ('{username}', '{hashlib.sha256(password.encode()).hexdigest()}', 4)"""))
         
         return """<meta http-equiv="refresh" content="0; URL=/login" />"""
+
+
+
+
             
         

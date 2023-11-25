@@ -91,6 +91,6 @@ query_asc = """UPDATE users
 SET 
     points = points / 10000;
 """
-conn.execute(sql.text(query_asc))
-conn.commit()
+#conn.execute(sql.text(query_asc))
+#conn.commit()
 

@@ -64,6 +64,7 @@ def selector(name : str, options : list, category : str = "") -> str:
 					</div>
 				</div>"""
 
+
 def datalist(name : str, options : list, lstid : str = "id") -> str:
 
 	opt = ""
