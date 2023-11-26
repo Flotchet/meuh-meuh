@@ -16,7 +16,8 @@ def logout(elem, method, form, args):
     
 	elem['content'] = Mk(f"""<div class="inner">
 								<section>
-									<h3>See you around!</h3>									
+									<h3>See you around!</h3>
+					  			<span class="image fit"><img src="static/images/see-you-space-collabo.gif" alt="pas trouvé"/></span>									
 								</section>
 	
 								<section>
