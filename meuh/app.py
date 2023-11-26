@@ -9,7 +9,7 @@ from os import listdir
 from os.path import join, dirname, abspath
 from importlib import import_module
 
-
+import sqlalchemy as sql
 from constructors import elements
 BASEDIR = abspath(dirname(__file__))
 APPLETDIR = join(BASEDIR, 'applets')
@@ -138,7 +138,28 @@ def core(applet = None):
         if elem['side_content'] == session['last_elem']['side_content']:
             #if not, return the last page
             from flask import Markup as MK
-            elem['side_content'] = MK('<br/><div class="row gtr-uniform"><div class="col-9"><span class="image fit"><img src="static/images/polish-cow-dancing-cow.gif" alt="pas trouvé"/></span> </div></div>')
+            from math import floor
+            to_add =""
+            if elem['_attr_lvl']:
+                #get the Username	Points	Sick Days	Holidays	Late Hours extra hours
+                engine = sql.create_engine('sqlite:///' + join(BASEDIR, 'applets/databases/users.db'))
+                conn = engine.connect()
+                query = f"SELECT username, points, sick_days, holidays, late_hours, extra_hours FROM users WHERE username = '{elem['_usr']}'"
+                user = conn.execute(sql.text(query)).fetchall()[0]
+                all_users_means = conn.execute(sql.text("SELECT AVG(points), AVG(sick_days), AVG(holidays), AVG(late_hours), AVG(extra_hours) FROM users")).fetchall()[0]
+                conn.close()
+                to_add = f"""
+                            <br/>
+                            <br/>
+                            <strong>Your stats</strong><br/>
+                            Username: {user[0]}<br/>
+                            Points: {user[1]} <strong>({floor(all_users_means[0])})</strong><br/>
+                            Sick Days: {user[2]} <strong>({floor(all_users_means[1])})</strong><br/>
+                            Holidays: {user[3]} <strong>({floor(all_users_means[2])})</strong><br/>
+                            Late Hours: {user[4]} <strong>({floor(all_users_means[3])})</strong><br/>
+                            Extra Hours: {user[5]} <strong>({floor(all_users_means[4])})</strong><br/>"""
+
+            elem['side_content'] = MK(to_add + '<br/><div class="row gtr-uniform"><div class="col-9"><span class="image fit"><img src="static/images/polish-cow-dancing-cow.gif" alt="pas trouvé"/></span> </div></div>')
 
     
 
