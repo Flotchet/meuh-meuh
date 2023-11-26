@@ -1,7 +1,7 @@
-from flask import Markup as Mk
-import sqlalchemy as sql
-
 from os.path import join, dirname, abspath
+
+import sqlalchemy as sql
+from flask import Markup as Mk
 
 from meuh.applets.admin_panel_ressources.attributions_changer import change_rpt_status
 from meuh.applets.ressources.buttons import selector_inc, submit
@@ -16,7 +16,6 @@ sys.path.append(ADMINPANELRESSOURCES)
 sys.path.append(BASEDIR)
 from buttons import *  # type: ignore
 from attributions_changer import *  # type: ignore
-from home import home
 
 
 def adminpanel(elem, method, form, args):
@@ -49,16 +48,15 @@ def adminpanel(elem, method, form, args):
         status = form['status']
         conn.close()
 
-        query = "SELECT id as ids,date AS d, report_type, accepted from reports WHERE accepted = 0 ORDER BY d DESC LIMIT 1"
+        query = "SELECT id,date AS d, report_type, accepted from reports WHERE accepted = 0 ORDER BY d DESC LIMIT 1"
         last_record = conn.execute(sql.text(query)).fetchone()
-        id_record = last_record.ids
-
+        print("ADMIN1")
 
         if last_record:
 
 
 
-            change_rpt_status(last_record.ids, status, conn)
+            #change_rpt_status(last_record.ids, status, conn)
             record_info = Mk(f"""<div class="row gtr-uniform"> <div class="col-12">
                                             <h3>Last warning</h3>
                                             <p>Date: {last_record.d}</p> <p>Report type: {last_record.report_type}</p>
@@ -67,16 +65,19 @@ def adminpanel(elem, method, form, args):
         else:
             record_info = Mk("<p>Aucun enregistrement à afficher</p>")
 
+    print("ADMIN2")
+
     acceptance_field = selector_inc("accr", ["Refusé", "Accepté"], "Acceptation")
 
     # Ajout du champ de sélection pour Refusé/Accepté
-    status_options = selector_inc("status", ["Refusé", "Accepté"], "Status")
-    print(status_options)
+    print("ADMIN3")
 
     # Bouton Submit
     submit_button = submit("Submit")
+    print("ADMIN4")
 
     accbtn = submit("Reports")
+    print("ADMIN5")
 
     elem['content'] = Mk(f"""   <section>
                                     <h3>Admin panel</h3>
@@ -91,7 +92,7 @@ def adminpanel(elem, method, form, args):
                                             
                                             {submit_button} 
                                             
-                                            {record_info}
+                                   
                                             
                                             {acceptance_field} 
 
