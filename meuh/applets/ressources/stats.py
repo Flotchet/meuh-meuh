@@ -25,7 +25,7 @@ def userlist():
 
     query_asc_report = """SELECT u.username, u.points, COUNT(r.user_id2) 
                         FROM users AS u 
-                        INNER JOIN reports AS r ON u.id = r.user_id2 
+                        INNER JOIN reports AS r ON u.id = r.user_id
                         GROUP BY u.id, u.username, u.points 
                         ORDER BY u.points ASC"""
     users_asc_report = conn.execute(sql.text(query_asc_report)).fetchall()
@@ -36,7 +36,7 @@ def userlist():
 
     query_desc_report = """SELECT u.username, u.points, COUNT(r.user_id2) 
                         FROM users AS u 
-                        INNER JOIN reports AS r ON u.id = r.user_id2 
+                        INNER JOIN reports AS r ON u.id = r.user_id
                         GROUP BY u.id, u.username, u.points 
                         ORDER BY u.points DESC"""
     users_desc_report = conn.execute(sql.text(query_desc_report)).fetchall()
