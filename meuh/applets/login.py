@@ -37,6 +37,7 @@ def login(elem, method, form, args):
    
 	elem['content'] = Mk(f"""       <section>
 									<h3>Log In</h3>
+					  				<img src="static/images/LOGIN.gif" alt="pas trouvé" style="width: 100%;"/>
 									
 									<form method="post" >
 	

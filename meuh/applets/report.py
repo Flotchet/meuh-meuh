@@ -36,7 +36,14 @@ def report(elem, method, form, args):
 		
 	elem['content'] = Mk(f"""<section>
 								<h3>Report</h3>
+					  <div class="row gtr-uniform">
+        				<div class="col-4">
+					  	</div>
+					  	<div class="col-4">
 					  			<span class="image fit"><img src="static/images/THANK-YOU-FOR-YOUR-SERVICES.gif" alt="pas trouvé"/></span>
+					  	</div>
+					  	<div class="col-4">
+					  	</div>
 								an employee had done something wrong? report it here!
 								<form method="post">
 									<div class="row gtr-uniform">

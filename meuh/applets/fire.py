@@ -97,7 +97,7 @@ def fire(elem, method, form, args):
 									<h3>Fire Someone!</h3>
 					  				<span class="image fit"><img src="static/images/FIRE-SOMONE.gif" alt="pas trouvé"/></span>
 					  				<p>Congratulations! You can choose a user to fire in the 10 worst employee!</p>
-									{content_udesc} {content_rdesc}
+									{content_udesc}
 									<form method="post">
 	
 										<div class="row gtr-uniform">

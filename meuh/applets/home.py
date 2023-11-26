@@ -101,13 +101,43 @@ def home(elem, method, form, args):
                     <h4>
                     <br/>
                     <br/>
-                    <strong>Your stats</strong><br/>
-                    Username: {user[0]}<br/>
-                    Points (mean of the company): {user[1]} <strong>({floor(all_users_means[0])})</strong><br/>
-                    Sick Days (mean of the company): {user[2]} <strong>({floor(all_users_means[1])})</strong><br/>
-                    Holidays (mean of the company): {user[3]} <strong>({floor(all_users_means[2])})</strong><br/>
-                    Late Hours (mean of the company): {user[4]} <strong>({floor(all_users_means[3])})</strong><br/>
-                    Extra Hours (mean of the company): {user[5]} <strong>({floor(all_users_means[4])})</strong><br/>
+                    <table>
+                        <tr>
+                            <th>Stats</th>
+                            <th>Your Value</th>
+                            <th>Company Mean</th>
+                        </tr>
+                        <tr>
+                            <td>Username</td>
+                            <td>{user[0]}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Points</td>
+                            <td>{user[1]}</td>
+                            <td>{floor(all_users_means[0])}</td>
+                        </tr>
+                        <tr>
+                            <td>Sick Days</td>
+                            <td>{user[2]}</td>
+                            <td>{floor(all_users_means[1])}</td>
+                        </tr>
+                        <tr>
+                            <td>Holidays</td>
+                            <td>{user[3]}</td>
+                            <td>{floor(all_users_means[2])}</td>
+                        </tr>
+                        <tr>
+                            <td>Late Hours</td>
+                            <td>{user[4]}</td>
+                            <td>{floor(all_users_means[3])}</td>
+                        </tr>
+                        <tr>
+                            <td>Extra Hours</td>
+                            <td>{user[5]}</td>
+                            <td>{floor(all_users_means[4])}</td>
+                        </tr>
+                    </table>
                     <br/>
                     <br/>
                     </h4>"""
@@ -121,15 +151,13 @@ def home(elem, method, form, args):
     <h1>Worst employee of the month is {user_asc[0][0]}</h1>
     <h1>Collabo of the month is {user_desc[0][0]}</h1>
     <div class="row gtr-uniform">
-        <div class="col-8">
+        <div class="col-12">
             {to_add}
-        </div>
-        <div class="col-4">
         </div>
     </div>
     <div class="row gtr-uniform">
         <div class="col-5">
-            <img src="static/images/BAD-BOY.gif" alt="pas trouvé" style="width: 100%;"/>
+            <img src="static/images/promoted-gris (1).gif" alt="pas trouvé" style="width: 100%;"/>
         </div>
 
         <div class="col-2">

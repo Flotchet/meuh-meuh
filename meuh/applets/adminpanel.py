@@ -70,6 +70,7 @@ def adminpanel(elem, method, form, args):
 
     elem['content'] = Mk(f"""   <section>
                                     <h3>Admin panel</h3>
+                                    <img src="static/images/admin2.gif" alt="pas trouvé" style="width: 100%;"/>
                                     
                                     <form method="post">
     
