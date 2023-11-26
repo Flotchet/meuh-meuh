@@ -97,8 +97,6 @@ def home(elem, method, form, args):
                 """
 
 
-                
-
             to_add = f"""
                     <h4>
                     <br/>

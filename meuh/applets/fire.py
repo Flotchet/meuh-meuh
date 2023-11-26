@@ -43,13 +43,29 @@ def fire(elem, method, form, args):
                             ORDER BY u.points DESC
                             LIMIT 10"""
 		users_desc_report = conn.execute(sql.text(query_desc_report)).fetchall()
-
+		conn.close()
 		return users_asc, users_desc, users_asc_report, users_desc_report
 
 	user_asc, user_desc, user_asc_report, user_desc_report = get_data()
 	#make a connection to the database
-	users = [user for user in user_asc if user[0] != elem['_usr']] # type: ignore
+	engine = sql.create_engine('sqlite:///' + join(BASEDIR, 'databases/users.db'))
+	conn = engine.connect()
+
+	users = get_all_usr(conn) # type: ignore
+	#remove the current user from the list
+	users = user_asc[0:10] # type: ignore
 	dtlst = datalist("users", [user[0] for user in users], "usr") # type: ignore
+	conn.close()
+
+	content_udesc = "<table><tr><th>Username</th><th>Points</th><th>Sick Days</th><th>Holidays</th><th>Late Hours</th></tr>"
+	for user in user_asc[0:10]:
+		content_udesc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td><td>{user[3]}</td><td>{user[4]}</td></tr>"
+	content_udesc += "</table>"
+	
+	content_rdesc = "<table><tr><th>Username</th><th>Points</th><th>Extra Hours</th><th>Reports Count</th></tr>"
+	for user in user_asc_report[0:10]:
+		content_rdesc += f"<tr><td>{user[0]}</td><td>{user[1]}</td><td>{user[2]}</td><td>{user[3]}</td></tr>"
+	content_rdesc += "</table>"
 
 
 	toadd = ""
@@ -80,17 +96,17 @@ def fire(elem, method, form, args):
 	elem['content'] = Mk(f"""   <section>
 									<h3>Fire Someone!</h3>
 					  				<p>Congratulations! You can choose a user to fire in the 10 worst employee!</p>
-									
+									{content_udesc} {content_rdesc}
 									<form method="post">
 	
 										<div class="row gtr-uniform">
 	
 											{dtlst} 
 											
-											{selector_inc("attr",["None", "User", "Employee", "Admin", "Super User"], "Attribution")}
+											{selector_inc("attr",["None", "User", "Employee"], "Attribution")}
 										
 	
-											{submit("Submit")}
+											{submit("Promote this employee to customer!")}
 										</div>
 									</form>
 								</section>""") + toadd 
