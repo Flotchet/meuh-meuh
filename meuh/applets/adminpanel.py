@@ -3,8 +3,7 @@ from os.path import join, dirname, abspath
 import sqlalchemy as sql
 from flask import Markup as Mk
 
-from meuh.applets.admin_panel_ressources.attributions_changer import change_rpt_status
-from meuh.applets.ressources.buttons import selector_inc, submit
+from applets.ressources.buttons import selector_inc, submit
 
 BASEDIR = abspath(dirname(__file__))
 RESSOURCES = join(BASEDIR, 'ressources')
@@ -45,39 +44,29 @@ def adminpanel(elem, method, form, args):
         if attr == "0":
             toadd = Mk(f"""<div class="row gtr-uniform"><div class="col-12"><h3>User deleted</h3></div></div>""")
 
-        status = form['status']
         conn.close()
+    query = "SELECT date AS d, report_type AS r, accepted,comment AS c from reports WHERE accepted = 0 ORDER BY d DESC LIMIT 1"
+    last_record = conn.execute(sql.text(query)).fetchone()
+    print(last_record)
 
-        query = "SELECT id,date AS d, report_type, accepted from reports WHERE accepted = 0 ORDER BY d DESC LIMIT 1"
-        last_record = conn.execute(sql.text(query)).fetchone()
-        print("ADMIN1")
+    if last_record:
 
-        if last_record:
-
-
-
-            #change_rpt_status(last_record.ids, status, conn)
-            record_info = Mk(f"""<div class="row gtr-uniform"> <div class="col-12">
-                                            <h3>Last warning</h3>
-                                            <p>Date: {last_record.d}</p> <p>Report type: {last_record.report_type}</p>
-                                        </div>
-                                     </div>""")
-        else:
-            record_info = Mk("<p>Aucun enregistrement à afficher</p>")
-
-    print("ADMIN2")
+        record_info = Mk(f"""<div class="row gtr-uniform"> <div class="col-12">
+                                        <h3>Last warning</h3>
+                                        <p>Date: {last_record.d}</p> <p>Report type: {last_record.r}</p><p> Comment: {last_record.c}</p>
+                                    </div>
+                                 </div>""")
+    else:
+        record_info = Mk("<p>Aucun enregistrement à afficher</p>")
 
     acceptance_field = selector_inc("accr", ["Refusé", "Accepté"], "Acceptation")
 
     # Ajout du champ de sélection pour Refusé/Accepté
-    print("ADMIN3")
 
     # Bouton Submit
     submit_button = submit("Submit")
-    print("ADMIN4")
 
     accbtn = submit("Reports")
-    print("ADMIN5")
 
     elem['content'] = Mk(f"""   <section>
                                     <h3>Admin panel</h3>
@@ -92,7 +81,7 @@ def adminpanel(elem, method, form, args):
                                             
                                             {submit_button} 
                                             
-                                   
+                                            {record_info}
                                             
                                             {acceptance_field} 
 
