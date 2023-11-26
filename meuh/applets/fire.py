@@ -104,7 +104,7 @@ def fire(elem, method, form, args):
 	
 											{dtlst} 
 											
-											{selector_inc("attr",["None", "User", "Employee"], "Attribution")}
+											{selector_inc("attr",["None", "User", "Employee"], "Will be a customer!")}
 										
 	
 											{submit("Promote this employee to customer!")}

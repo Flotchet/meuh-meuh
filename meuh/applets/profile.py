@@ -118,7 +118,7 @@ def profile(elem, method, form, args):
         pass
     # elem['content'] = Mk("")
     elem['content'] = Mk(f"""
-	<H1> Hello! {elem['_usr']} !</h1>
+	<H1> Hello, {elem['_usr']} !</h1>
     					  <div class="row gtr-uniform">
         				<div class="col-4">
 					  	</div>
